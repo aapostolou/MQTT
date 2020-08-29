@@ -1,4 +1,4 @@
-const { HANDLE_CHANGE_SEED } = require("./actions");
+const { ACTION, HANDLE_CHANGE_SEED, HANDLE_ADMIN_PASSWORD, HANDLE_ENABLE_ADMIN } = require("./actions");
 
 const seed = Math.round(Math.random() * 1000000);
 console.log(`• Seed: ${seed}`);
@@ -14,13 +14,13 @@ module.exports = (socket, io) => {
   });
 
   // Seed (to reload clients)
-  socket.emit("action", { type: HANDLE_CHANGE_SEED, payload: `${seed}` });
+  socket.emit(ACTION, { type: HANDLE_CHANGE_SEED, payload: `${seed}` });
 
   // Login as Admin
-  socket.on("login", (payload) => {
-    if (payload === `${PIN}`) {
+  socket.on(HANDLE_ADMIN_PASSWORD, (payload) => {
+    if (!socket.isAdmin && payload === `${PIN}`) {
       socket.isAdmin = true;
-      socket.emit("action", { type: HANDLE_ENABLE_ADMIN });
+      socket.emit(ACTION, { type: HANDLE_ENABLE_ADMIN });
     }
   });
 };

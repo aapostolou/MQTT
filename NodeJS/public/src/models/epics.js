@@ -2,6 +2,7 @@ import { map, debounceTime } from "rxjs/operators";
 import { ofType, combineEpics } from "redux-observable";
 
 import {
+  ACTION,
   NO_ACTION,
   RESET,
   HANDLE_RESET,
@@ -14,7 +15,11 @@ import {
   HANDLE_SWIPE_RIGHT,
   HANDLE_SWIPE_UP,
   HANDLE_SWIPE_DOWN,
+  HANDLE_SEND_ACTION,
   HANDLE_CHANGE_SEED,
+  HANDLE_ADMIN_PASSWORD,
+  ENABLE_ADMIN,
+  HANDLE_ENABLE_ADMIN,
 } from "./actions";
 
 import { availableLanguages } from "./reducers";
@@ -95,7 +100,20 @@ const handleSwipeDownEpic = (action$, state$) =>
   );
 
 // Socket.io
-const handleChangeSeedEpic = (action$, state$) =>
+const handleSendActionEpic = (action$, state$) =>
+  action$.pipe(
+    ofType(HANDLE_SEND_ACTION),
+    map((action) => {
+      const { payload } = action$;
+      const { socket } = state$.value;
+
+      if (socket) socket.emit(ACTION, payload);
+
+      return { type: NO_ACTION };
+    })
+  );
+
+const handleChangeSeedEpic = (action$) =>
   action$.pipe(
     ofType(HANDLE_CHANGE_SEED),
     map((action) => {
@@ -108,6 +126,26 @@ const handleChangeSeedEpic = (action$, state$) =>
       return { type: NO_ACTION };
     })
   );
+const handleAdminPasswordEpic = (action$, state$) =>
+  action$.pipe(
+    ofType(HANDLE_ADMIN_PASSWORD),
+    map((action) => {
+      const { payload } = action;
+      const { socket } = state$.value;
+
+      socket.emit(HANDLE_ADMIN_PASSWORD, payload);
+
+      return { type: NO_ACTION };
+    })
+  );
+const handleEnableAdminEpic = (action$) =>
+  action$.pipe(
+    ofType(HANDLE_ENABLE_ADMIN),
+    map((action) => {
+
+      return { type: ENABLE_ADMIN };
+    })
+  );
 
 const rootEpic = combineEpics(
   handleResetEpic,
@@ -117,7 +155,10 @@ const rootEpic = combineEpics(
   handleSwipeRightEpic,
   handleSwipeUpEpic,
   handleSwipeDownEpic,
-  handleChangeSeedEpic
+  handleSendActionEpic,
+  handleChangeSeedEpic,
+  handleAdminPasswordEpic,
+  handleEnableAdminEpic
 );
 
 export default rootEpic;

@@ -1,5 +1,5 @@
 {
-    "name": "create-my-react-app",
+    "name": "mqtt-dashboard",
     "version": "0.1.0",
     "private": true,
     "dependencies": {

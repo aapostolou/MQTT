@@ -1,11 +1,16 @@
 import React, { useRef } from "react";
 
+import { connect } from "react-redux";
+import { handleAdminPassword } from "models/actions";
+
 import "./Login.css";
 
-const Login = () => {
+const Login = ({ handleAdminPassword }) => {
   const passRef = useRef(null);
 
-  const handleKeyPress = () => {};
+  const handleKeyPress = (e) => {
+    handleAdminPassword(e.target.value);
+  };
 
   return (
     <form className="login" autoComplete="off">
@@ -20,4 +25,8 @@ const Login = () => {
   );
 };
 
-export default Login;
+const mapDispatchToProps = (dispatch) => ({
+  handleAdminPassword: (payload) => dispatch(handleAdminPassword(payload))
+})
+
+export default connect(null, mapDispatchToProps)(Login);

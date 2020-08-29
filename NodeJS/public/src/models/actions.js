@@ -1,4 +1,5 @@
 // GENERAL
+export const ACTION = "ACTION";
 export const NO_ACTION = "NO_ACTION";
 
 export const RESET = "RESET";
@@ -14,6 +15,11 @@ export const CLOSE_SIDEBAR = "CLOSE_SIDEBAR";
 export const HANDLE_TOGGLE_SIDEBAR = "HANDLE_TOGGLE_SIDEBAR";
 
 // Socket.io
+export const INITIALIZE_SOCKET = "INITIALIZE_SOCKET";
+export const HANDLE_SEND_ACTION = "HANDLE_SEND_ACTION";
+export const HANDLE_ADMIN_PASSWORD = "HANDLE_ADMIN_PASSWORD";
+export const ENABLE_ADMIN = "ENABLE_ADMIN";
+export const HANDLE_ENABLE_ADMIN = "HANDLE_ENABLE_ADMIN";
 export const HANDLE_CHANGE_SEED = "HANDLE_CHANGE_SEED";
 
 // Swipe
@@ -43,9 +49,21 @@ export const handleToggleSidebar = () => ({
 });
 
 // Socket.io Action Handler
+export const handleInitializeSocket = (payload) => ({
+  type: INITIALIZE_SOCKET,
+  payload
+});
+export const handleSendAction = (action) => ({
+  type: HANDLE_SEND_ACTION,
+  action
+});
 export const handleAction = (payload) => ({
   type: payload.type || NO_ACTION,
   payload: payload.payload,
+});
+export const handleAdminPassword = (payload) => ({
+  type: HANDLE_ADMIN_PASSWORD,
+  payload
 });
 
 // Swipe
