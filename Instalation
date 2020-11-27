@@ -1,0 +1,106 @@
+apt-get update && apt-get -y upgrade
+
+# Initial Settings
+• User Account
+----------------------------------
+    -    | New User | Raspbian  |
+----------------------------------
+Username |   user   |    pi     |
+Password |   user   | raspberry |
+
+• Root Account
+Username: root
+Password: root
+
+# Remote Terminal
+nano /etc/ssh/sshd_config
+>> PermitRootLogin yes
+systemctl enable ssh && systemctl start ssh && reboot
+
+# Remote Desktop
+apt-get install -y xrdp
+
+==============================
+=========== SERVER ===========
+==============================
+
+# Task Schedule
+crontab -e
+>> 0 0 * * 6 apt-get update -y && apt-get upgrade -y
+
+# MQTT Broker
+*Install mqtt server
+	*Create file to save passwords 
+	*Create password 'root' for user 'root'
+	*Create password 'viewuser' for user 'viewuser'
+	*Convert password file into one using hashed passwords
+
+apt-get install -y mosquitto &&
+	mosquitto_passwd -c /etc/mosquitto/passwd root
+	mosquitto_passwd -b /etc/mosquitto/passwd viewuser viewuser
+# Encryption
+# mosquitto_passwd -U /etc/mosquitto/passwd
+
+*Force authedication of users
+nano /etc/mosquitto/conf.d/mosquitto.conf
+>> # Force authedication
+>> allow_anonymous false
+>> password_file /etc/mosquitto/passwd
+
+********************
+* Create ACL file
+nano /etc/mosquitto/acl
+>> # Administrators
+>> user root
+>> topic readwrite #
+>>
+>> # Viewuser
+>> user viewuser
+>> topic read #
+
+* Read ACL file
+nano /etc/mosquitto/conf.d/mosquitto.conf
+>> # ACL
+>> acl_file /etc/mosquitto/acl
+*********************
+
+
+	# mosquitto_sub -h debian -t test -u viewuser -P viewuser 
+	# mosquitto_pub -h debian -t test -m "Hello world" -u viewuser sudo passwd root -P viewuser
+
+* Restart service
+service mosquitto restart
+
+==============================
+
+# Web Server Installation
+apt-get install -y apache2
+	# systemctl stop apache2
+	# systemctl start apache2
+	# systemctl restart apache2
+	# systemctl reload apache2
+	# systemctl disable apache2
+	# systemctl enable apache2
+
+apt-get install -y default-mysql-server
+	#apt-cache search mysql-server
+	mysql_secure_installation
+
+apt-get install -y php php-mysql
+
+==============================
+========== CLIENT ============
+==============================
+
+# Raspberry Pi 3
+*Raspbian Installation
+*Set default user password to 'user'
+sudo passwd user
+> user
+*Set root passwod
+sudo passwd root
+> root
+
+
+# MQTT Client
+apt-get install -y mosquitto-clients
