@@ -1,0 +1,36 @@
+.control-panel {
+  width: 300px;
+  height: 100vh;
+
+  font-family: "Nunito", sans-serif;
+  font-weight: bold;
+
+  background: rgb(16, 172, 204);
+  background: linear-gradient(
+    0deg,
+    var(--color-blue) 25%,
+    var(--color-green) 100%
+  );
+
+  z-index: 5;
+
+  overflow: scroll;
+}
+
+@media screen and (max-width: 767px) {
+  .control-panel {
+    position: absolute;
+
+    transform: translateX(-100%);
+
+    transition: all 0.3s ease-in-out;
+  }
+  .control-panel.is--active {
+    transform: translateX(0%);
+  }
+}
+
+.control-panel__header {
+  display: flex;
+  justify-content: flex-end;
+}

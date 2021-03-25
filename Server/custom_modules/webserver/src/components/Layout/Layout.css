@@ -1,0 +1,34 @@
+.layout.hide-overflow {
+  overflow: hidden;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  grid-template-rows: auto 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    "control-panel header"
+    "control-panel main";
+
+  width: 100vw;
+  height: 100vh;
+
+  overflow: hidden;
+}
+.header {
+  grid-area: header;
+}
+.control-panel {
+  grid-area: control-panel;
+}
+.main {
+  grid-area: main;
+}
+
+@media screen and (max-width: 767px) {
+  .layout {
+    display: flex;
+    flex-direction: column;
+  }
+}

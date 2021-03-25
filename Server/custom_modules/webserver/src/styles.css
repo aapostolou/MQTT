@@ -1,0 +1,25 @@
+:root {
+  --color-blue: #10adcc;
+  --color-green: #40d31f;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.hide-scrollbar {
+  /*FireFox*/
+  scrollbar-width: none;
+  /*IE10+*/
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  /*Chrome, Safari, Edge*/
+  display: none;
+}
+
+svg {
+  display: block;
+}

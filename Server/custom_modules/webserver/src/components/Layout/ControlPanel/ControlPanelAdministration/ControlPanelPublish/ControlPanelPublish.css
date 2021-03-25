@@ -1,0 +1,50 @@
+.control-panel-publish {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  margin: 25px 0;
+}
+
+.control-panel-publish > * {
+  width: calc(100% - 50px);
+
+  margin: 10px 25px;
+  padding: 5px;
+
+  outline: none;
+  border: none;
+
+  background: #ffffff55;
+
+  box-sizing: border-box;
+}
+
+.control-panel-publish__topic {
+  box-sizing: border-box;
+}
+.control-panel-publish__message {
+  height: 150px;
+
+  resize: none;
+}
+.control-panel-publish__submit {
+  align-self: flex-end;
+
+  width: 30%;
+
+  border-radius: 3px;
+
+  background: #ffffff99;
+  transition: all 0.2s ease-in-out;
+
+  cursor: pointer;
+}
+.control-panel-publish__submit:hover {
+  color: white;
+  background: #000000aa;
+}
+.control-panel-publish__submit:active {
+  background: #ffffffdd;
+}

@@ -1,0 +1,37 @@
+.control-panel__add-btn {
+  margin: 25px;
+}
+
+.add-btn {
+  display: flex;
+  align-items: center;
+
+  padding: 5px;
+
+  border-radius: 100vmax;
+
+  background: #ffffff99;
+
+  transition: all 0.2s ease-in-out;
+
+  cursor: pointer;
+}
+.add-btn:hover {
+  color: white;
+  background: #000000aa;
+}
+.add-btn:active {
+  background: #ffffffdd;
+}
+
+.add-btn__text {
+  flex: 1;
+
+  padding: 10px;
+}
+
+.add-btn__icon {
+  padding: 0 5px;
+
+  border-left: 2px solid #666;
+}

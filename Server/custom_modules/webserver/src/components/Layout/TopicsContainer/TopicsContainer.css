@@ -1,0 +1,7 @@
+.topics-container {
+  overflow: scroll;
+}
+
+.shape-content {
+  outline: 1px dashed var(--color-blue) !important;
+}

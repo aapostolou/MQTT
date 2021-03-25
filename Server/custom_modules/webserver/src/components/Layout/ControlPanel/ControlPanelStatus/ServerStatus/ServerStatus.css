@@ -1,0 +1,50 @@
+.server-status {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.server-status__icon {
+  position: relative;
+}
+
+.server-status__status-icons > * {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: absolute;
+
+  margin: 0;
+
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  opacity: 0;
+
+  transition: all 0.3s ease-in-out;
+}
+
+.server-status.is--active .server-status__active {
+  opacity: 1;
+}
+.server-status.is--inactive .server-status__inactive {
+  opacity: 1;
+
+  animation: flashing 1s infinite linear;
+}
+
+@keyframes flashing {
+  0% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.2;
+  }
+}

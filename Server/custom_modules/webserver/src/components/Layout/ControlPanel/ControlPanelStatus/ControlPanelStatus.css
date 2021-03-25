@@ -1,0 +1,4 @@
+.control-panel-status {
+  display: flex;
+  justify-content: space-evenly;
+}
