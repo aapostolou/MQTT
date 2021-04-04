@@ -14,8 +14,8 @@ import {
 } from "models/server/actions";
 
 import { io } from "socket.io-client";
-// const ENDPOINT = "192.168.1.202:1994";
-const ENDPOINT = "http://localhost:1994";
+const ENDPOINT = "https://192.168.1.202:1994";
+// const ENDPOINT = "http://localhost:1994";
 
 const SocketIO = ({
   handleWebserverSocketInit,
