@@ -6,7 +6,7 @@ import { handleAuthenticateUser } from "models/server/actions";
 
 import "./ControlPanelAuthenticate.css";
 
-const ControlPanelAuthenticate = ({ handleAuthenticateUser }) => {
+const ControlPanelAuthenticate = ({ socket, handleAuthenticateUser }) => {
   const handleChange = (e) => {
     handleAuthenticateUser(e.currentTarget.value);
   };
@@ -22,10 +22,17 @@ const ControlPanelAuthenticate = ({ handleAuthenticateUser }) => {
   );
 };
 
+const mapStateToProps = (state) => ({
+  socket: state.server["WEBSERVER"].socket,
+});
+
 const mapDispatchToProps = (dispatch) => ({
   handleAuthenticateUser: (payload) => {
     dispatch(handleAuthenticateUser(payload));
-  }
+  },
 });
 
-export default connect(null, mapDispatchToProps)(ControlPanelAuthenticate);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(ControlPanelAuthenticate);

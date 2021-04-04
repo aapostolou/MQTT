@@ -11,9 +11,10 @@ import Debug from "components/Debug";
 
 const App = () => (
   <Provider store={store}>
-    {(!process.env.NODE_ENV || process.env.NODE_ENV === "development") && (
-      <Debug />
-    )}
+    {false &&
+      (!process.env.NODE_ENV || process.env.NODE_ENV === "development") && (
+        <Debug />
+      )}
 
     <Layout />
     <SocketIO />

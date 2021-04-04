@@ -8,7 +8,10 @@ import { connect } from "react-redux";
 const ControlPanelStatus = ({ server }) => {
   return (
     <div className="control-panel-status">
-      <ServerStatus name={"MQTT"} status={server["MQTT"].isConnected} />
+      <ServerStatus
+        name={"MQTT"}
+        status={server["MQTT"].isConnected && server["WEBSERVER"].isConnected}
+      />
       <ServerStatus
         name={"WEBSERVER"}
         status={server["WEBSERVER"].isConnected}

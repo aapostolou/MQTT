@@ -10,6 +10,7 @@ import { SwitchFieldConstructor } from "./SwitchField";
 import { ThermometerConstructor } from "./Thermometer";
 
 import "./Fields.css";
+import { SquareX } from "tabler-icons-react";
 
 const fields = {
   text: <TextFieldConstructor />,
@@ -44,6 +45,10 @@ const _Constructor = ({ isOpen, handleConstructorClose }) => {
     }
   };
 
+  const handleCloseClick = () => {
+    handleConstructorClose();
+  };
+
   useEffect(() => {
     window.addEventListener("keyup", handleKeyUp);
 
@@ -55,6 +60,9 @@ const _Constructor = ({ isOpen, handleConstructorClose }) => {
   return (
     <div className={generateClasses()}>
       <div className="topic-constructor__block">
+        <div className="topic-constructor__close" onClick={handleCloseClick}>
+          <SquareX size={30} color={"#333"} />
+        </div>
         Type :
         <select ref={selectRef} onChange={handleTypeSelect}>
           {Object.keys(fields).map((type, i) => (

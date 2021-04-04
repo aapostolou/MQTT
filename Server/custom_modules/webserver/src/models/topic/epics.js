@@ -11,6 +11,8 @@ import {
   HANDLE_TOPIC_REMOVE,
   HANDLE_TOPIC_UPDATE,
   TOPIC_UPDATE,
+  SENDING_DELETE_TOPIC_REQUEST_TO_SERVER,
+  HANDLE_DELETE_TOPIC,
 } from "./actions";
 
 import { isTypeOf } from "helpers";
@@ -137,8 +139,14 @@ const handleTopicsRemoveEpic = (action$) =>
       if (payload == undefined) {
         throw `${HANDLE_TOPIC_REMOVE} ~ 'payload' is not set !`;
       }
-      if (isTypeOf(payload) !== "string") {
-        throw `${HANDLE_TOPIC_REMOVE} ~ 'payload' must be a 'string' !`;
+      if (payload.name == null) {
+        throw `${HANDLE_TOPIC_REMOVE} ~ 'payload' is missing a 'name' !`;
+      }
+      if (!isTypeOf(payload.name) === "string") {
+        throw `${HANDLE_TOPIC_REMOVE} ~ 'payload.name' must be a 'string' !`;
+      }
+      if (payload.type && !isTypeOf(payload.type) === "string") {
+        throw `${HANDLE_TOPIC_REMOVE} ~ 'payload.type' must be a 'string' !`;
       }
 
       return {
@@ -148,9 +156,43 @@ const handleTopicsRemoveEpic = (action$) =>
     })
   );
 
+/* REMOVE */
+const handleDeleteTopicEpic = (action$, state$) =>
+  action$.pipe(
+    ofType(HANDLE_DELETE_TOPIC),
+    map((action) => {
+      const { payload } = action;
+
+      if (payload == undefined) {
+        throw `${HANDLE_DELETE_TOPIC} ~ 'payload' is not set !`;
+      }
+      if (payload.name == null) {
+        throw `${HANDLE_DELETE_TOPIC} ~ 'payload' is missing a 'name' !`;
+      }
+      if (!isTypeOf(payload.name) === "string") {
+        throw `${HANDLE_DELETE_TOPIC} ~ 'payload.name' must be a 'string' !`;
+      }
+      if (payload.type == null) {
+        throw `${HANDLE_DELETE_TOPIC} ~ 'payload' is missing a 'type' !`;
+      }
+      if (!isTypeOf(payload.type) === "string") {
+        throw `${HANDLE_DELETE_TOPIC} ~ 'payload.type' must be a 'string' !`;
+      }
+
+      const { socket } = state$.value.server["WEBSERVER"];
+
+      socket.emit(HANDLE_DELETE_TOPIC, payload);
+
+      return {
+        type: SENDING_DELETE_TOPIC_REQUEST_TO_SERVER,
+      };
+    })
+  );
+
 export const rootEpic = combineEpics(
   handleTopicsInitEpic,
   handleTopicsAddEpic,
   handleTopicsUpdateEpic,
+  handleDeleteTopicEpic,
   handleTopicsRemoveEpic
 );

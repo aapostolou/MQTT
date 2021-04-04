@@ -3,10 +3,12 @@ const mqtt = require("mqtt");
 const client = mqtt.connect("mqtt://192.168.1.202:1883");
 
 client.on("connect", function () {
-  emitMqttStatus();
+  io.emit("HANDLE_DISPATCH_ACTION", {
+    type: "HANDLE_MQTT_CONNECTED",
+  });
 
   /* Subscribe to Database Topics */
-  let topics = ["test", "temperature"];
+  let topics = ["text", "json", "switch", "temperature", "button"];
   if (topics.length) {
     client.subscribe(topics, (err) => {
       if (err) console.log(err);
@@ -15,11 +17,15 @@ client.on("connect", function () {
 });
 
 client.on("reconnect", function () {
-  emitMqttStatus();
+  io.emit("HANDLE_DISPATCH_ACTION", {
+    type: "HANDLE_MQTT_CONNECTED",
+  });
 });
 
 client.on("disconnect", function () {
-  emitMqttStatus();
+  io.emit("HANDLE_DISPATCH_ACTION", {
+    type: "HANDLE_MQTT_DISCONNECTED",
+  });
 });
 
 client.on("message", function (topic, message) {
@@ -28,43 +34,101 @@ client.on("message", function (topic, message) {
     message: message.toString(),
   });
 
-  io.emit("HANLDE_TOPIC_UPDATE", {
-    topic,
-    message: message.toString(),
+  io.admins.forEach((admin) => {
+    admin.emit("HANDLE_DISPATCH_ACTION", {
+      type: "HANDLE_TOPIC_UPDATE",
+      payload: { name: topic, value: message.toString() },
+    });
   });
 });
 
-const emitMqttStatus = () => {
-  io.emit("mqtt", {
-    status: client.connected,
-  });
-};
-
 io.on("connection", (socket) => {
-  /* Subscribe */
-  socket.on("subscribe", (payload) => {
+  if (client.connected) {
+    socket.emit("HANDLE_DISPATCH_ACTION", {
+      type: "HANDLE_MQTT_CONNECTED",
+    });
+  }
+
+  /* Publish */
+  socket.on("HANDLE_PUBLISH_TOPIC", (payload) => {
     if (!socket.isAdmin) return;
     if (!client.connected) return;
 
-    /* Name - Type - Attributes */
+    console.log(payload);
 
-    client.subscribe(payload.topic, (err) => {
-      if (!err) {
-        console.log(`Subscribed to topic '${payload.topic}'.`);
+    const { topic, message } = payload;
+    client.publish(topic, message);
+  });
 
-        io.emit("HANDLE_TOPIC_ADD", {
-          ...payload,
+  /* Subscribe */
+  socket.on("HANDLE_CREATE_TOPIC", (payload) => {
+    if (!socket.isAdmin) return;
+    if (!client.connected) return;
+
+    if (
+      topics.every(
+        (topic) => topic.name != payload.name || topic.type != payload.type
+      )
+    ) {
+      if (topics.findIndex((topic) => topic.name == payload.name) == -1) {
+        io.admins.forEach((admin) => {
+          admin.emit("HANDLE_DISPATCH_ACTION", {
+            type: "HANDLE_TOPIC_ADD",
+            payload,
+          });
         });
-
-        /* Save to Database */
       } else {
-        console.log(
-          `An error occurred while subscribing to topic '${payload.topic}' !`
-        );
-        socket.emit("error", {
-          error: `An error occurred while subscribing to topic '${payload.topic}' !`,
+        client.subscribe(payload.topic, (err) => {
+          if (!err) {
+            console.log(`Subscribed to topic '${payload.topic}'.`);
+
+            io.admins.forEach((admin) => {
+              admin.emit("HANDLE_DISPATCH_ACTION", {
+                type: "HANDLE_TOPIC_ADD",
+                payload,
+              });
+            });
+
+            /* Save to Database */
+          } else {
+            console.log(
+              `An error occurred while subscribing to topic '${payload.topic}' !`
+            );
+            socket.emit("error", {
+              error: `An error occurred while subscribing to topic '${payload.topic}' !`,
+            });
+          }
         });
       }
+
+      topics.push(payload);
+      database.write(JSON.stringify(topics));
+    } else {
+      socket.emit("HANDLE_DISPATCH_ACTION", {
+        type: "ABORT_TOPIC_ADD",
+        payload: { response: "Topic already exists." },
+      });
+    }
+  });
+
+  socket.on("HANDLE_DELETE_TOPIC", (payload) => {
+    if (!socket.isAdmin) return;
+    if (!client.connected) return;
+
+    console.log(payload);
+
+    topics = topics.filter(
+      (topic) =>
+        !(topic.name === payload.name && payload.type
+          ? topic.type === payload.type
+          : false)
+    );
+
+    database.write(JSON.stringify(topics));
+
+    socket.emit("HANDLE_DISPATCH_ACTION", {
+      type: "HANDLE_TOPIC_REMOVE",
+      payload,
     });
   });
 

@@ -54,3 +54,21 @@
   margin: 0;
   padding: 0;
 }
+
+.topic__delete {
+  position: absolute;
+
+  margin: 5px;
+
+  top: 0;
+  right: 0;
+
+  opacity: 0;
+
+  cursor: pointer;
+
+  transition: all 0.1s ease-in-out;
+}
+.topic:hover .topic__delete {
+  opacity: 1;
+}

@@ -1,16 +1,19 @@
 import { combineReducers } from "redux";
 
+import { RESET } from "models/general/actions";
+
 import {
   AUTHENTICATE_USER,
   WEBSERVER_CONNECTED,
   WEBSERVER_DISCONNECTED,
   MQTT_CONNECTED,
-  MQTT_DISCONNECTED
+  MQTT_DISCONNECTED,
+  WEBSERVER_SOCKET_INIT,
 } from "./actions";
 
 /* - MQTT - */
 const initialMqttServerState = {
-  isConnected: false
+  isConnected: false,
 };
 
 const mqttServerReducer = (state = initialMqttServerState, action) => {
@@ -27,7 +30,8 @@ const mqttServerReducer = (state = initialMqttServerState, action) => {
 /* - WEBSERVER - */
 const initialWebserverServerState = {
   isConnected: false,
-  isAdmin: false
+  isAdmin: false,
+  socket: null,
 };
 
 const webserverServerReducer = (
@@ -35,12 +39,19 @@ const webserverServerReducer = (
   action
 ) => {
   switch (action.type) {
+    case WEBSERVER_SOCKET_INIT:
+      return { ...state, socket: action.payload.socket };
     case WEBSERVER_CONNECTED:
       return { ...state, isConnected: true };
     case WEBSERVER_DISCONNECTED:
       return { ...state, isConnected: false };
     case AUTHENTICATE_USER:
       return { ...state, isAdmin: true };
+    case RESET:
+      return {
+        ...state,
+        isAdmin: false,
+      };
     default:
       return state;
   }
@@ -48,5 +59,5 @@ const webserverServerReducer = (
 
 export const rootReducer = combineReducers({
   MQTT: mqttServerReducer,
-  WEBSERVER: webserverServerReducer
+  WEBSERVER: webserverServerReducer,
 });

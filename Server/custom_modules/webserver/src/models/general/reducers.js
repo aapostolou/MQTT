@@ -1,17 +1,18 @@
 import { combineReducers } from "redux";
 
 import {
+  RESET,
   SCREEN_UPDATE_TO_MOBILE,
   SCREEN_UPDATE_TO_DESKTOP,
   CONTROL_PANEL_CLOSE,
   CONTROL_PANEL_OPEN,
   CONSTRUCTOR_OPEN,
-  CONSTRUCTOR_CLOSE
+  CONSTRUCTOR_CLOSE,
 } from "./actions";
 
 /* SCREEN */
 const initialScreenState = {
-  isMobile: null
+  isMobile: null,
 };
 
 const screenReducer = (state = initialScreenState, action) => {
@@ -27,7 +28,7 @@ const screenReducer = (state = initialScreenState, action) => {
 
 /* CONTROL PANEL */
 const initialControlPanelState = {
-  isOpen: false
+  isOpen: false,
 };
 
 const controlPanelReducer = (state = initialControlPanelState, action) => {
@@ -36,6 +37,8 @@ const controlPanelReducer = (state = initialControlPanelState, action) => {
       return { ...state, isOpen: true };
     case CONTROL_PANEL_CLOSE:
       return { ...state, isOpen: false };
+    case RESET:
+      return initialControlPanelState;
     default:
       return state;
   }
@@ -43,7 +46,7 @@ const controlPanelReducer = (state = initialControlPanelState, action) => {
 
 /* Constructor */
 const initialConstructorState = {
-  isOpen: false
+  isOpen: false,
 };
 
 const constructorReducer = (state = initialConstructorState, action) => {
@@ -52,6 +55,8 @@ const constructorReducer = (state = initialConstructorState, action) => {
       return { ...state, isOpen: true };
     case CONSTRUCTOR_CLOSE:
       return { ...state, isOpen: false };
+    case RESET:
+      return initialConstructorState;
     default:
       return state;
   }
@@ -60,5 +65,5 @@ const constructorReducer = (state = initialConstructorState, action) => {
 export const rootReducer = combineReducers({
   screen: screenReducer,
   controlPanel: controlPanelReducer,
-  field_constructor: constructorReducer
+  field_constructor: constructorReducer,
 });

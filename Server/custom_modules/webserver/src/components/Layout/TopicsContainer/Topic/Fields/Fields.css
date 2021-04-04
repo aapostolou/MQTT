@@ -31,6 +31,8 @@
 }
 
 .topic-constructor__block {
+  position: relative;
+
   padding: 25px;
 
   background: #ffffffdd;
@@ -74,4 +76,15 @@
 .topic-constructor button:hover {
   color: white;
   background: #333;
+}
+
+.topic-constructor__close {
+  position: absolute;
+
+  margin: 5px;
+
+  top: 0;
+  right: 0;
+
+  cursor: pointer;
 }

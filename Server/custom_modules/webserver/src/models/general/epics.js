@@ -15,8 +15,21 @@ import {
   HANDLE_SCREEN_UPDATE_TO_DESKTOP,
   HANDLE_SCREEN_UPDATE_TO_MOBILE,
   SCREEN_UPDATE_TO_DESKTOP,
-  SCREEN_UPDATE_TO_MOBILE
+  SCREEN_UPDATE_TO_MOBILE,
+  HANDLE_RESET,
+  RESET,
 } from "models/general/actions";
+
+/* RESET */
+const handleResetEpic = (action$) =>
+  action$.pipe(
+    ofType(HANDLE_RESET),
+    map((action) => {
+      return {
+        type: RESET,
+      };
+    })
+  );
 
 /* SCREEN */
 const handleScreenToDesktopEpic = (action$) =>
@@ -24,7 +37,7 @@ const handleScreenToDesktopEpic = (action$) =>
     ofType(HANDLE_SCREEN_UPDATE_TO_DESKTOP),
     map((action) => {
       return {
-        type: SCREEN_UPDATE_TO_DESKTOP
+        type: SCREEN_UPDATE_TO_DESKTOP,
       };
     })
   );
@@ -34,7 +47,7 @@ const handleScreenToMobileEpic = (action$) =>
     ofType(HANDLE_SCREEN_UPDATE_TO_MOBILE),
     map((action) => {
       return {
-        type: SCREEN_UPDATE_TO_MOBILE
+        type: SCREEN_UPDATE_TO_MOBILE,
       };
     })
   );
@@ -45,7 +58,7 @@ const handleControlPanelOpenEpic = (action$) =>
     ofType(HANDLE_CONTROL_PANEL_OPEN),
     map((action) => {
       return {
-        type: CONTROL_PANEL_OPEN
+        type: CONTROL_PANEL_OPEN,
       };
     })
   );
@@ -55,7 +68,7 @@ const handleControlPanelCloseEpic = (action$) =>
     ofType(HANDLE_CONTROL_PANEL_CLOSE),
     map((action) => {
       return {
-        type: CONTROL_PANEL_CLOSE
+        type: CONTROL_PANEL_CLOSE,
       };
     })
   );
@@ -66,7 +79,7 @@ const handleConstructorOpenEpic = (action$) =>
     ofType(HANDLE_CONSTRUCTOR_OPEN),
     map((action) => {
       return {
-        type: CONSTRUCTOR_OPEN
+        type: CONSTRUCTOR_OPEN,
       };
     })
   );
@@ -76,12 +89,13 @@ const handleConstructorCloseEpic = (action$) =>
     ofType(HANDLE_CONSTRUCTOR_CLOSE),
     map((action) => {
       return {
-        type: CONSTRUCTOR_CLOSE
+        type: CONSTRUCTOR_CLOSE,
       };
     })
   );
 
 export const rootEpic = combineEpics(
+  handleResetEpic,
   handleScreenToDesktopEpic,
   handleScreenToMobileEpic,
   handleControlPanelOpenEpic,
