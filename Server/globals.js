@@ -9,16 +9,16 @@ global.broker = "mqtt://192.168.1.202:1883";
 /* Topics */
 
 global.topics = [
-  { name: "text", value: "text", type: "text" },
-  { name: "json", value: { test: "test" }, type: "json" },
+  { name: "test", value: "text", type: "text" },
+  { name: "test", value: { test: "test" }, type: "json" },
   {
-    name: "switch",
+    name: "test",
     value: "0",
     type: "switch",
-    attributes: { values: ["0", "1"] },
+    attributes: { values: ["0", "1", "2", "3"] },
   },
   {
-    name: "button",
+    name: "test",
     value: "test",
     type: "button",
     attributes: { value: "1" },
